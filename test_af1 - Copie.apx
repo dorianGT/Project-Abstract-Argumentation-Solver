@@ -1,0 +1,4 @@
+arg(A).
+arg(B)
+att(A,B).
+att(B,A).
