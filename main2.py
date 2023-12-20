@@ -510,9 +510,9 @@ def main(argv):
             if arg not in extension:
                 output = 'NO'
     
-    print(co)
-    print(skep(co))
-    print(cred(co))
+    #print(co)
+    #print(skep(co))
+    #print(cred(co))
     print(output, "\n")
                               
 if __name__ == "__main__":
