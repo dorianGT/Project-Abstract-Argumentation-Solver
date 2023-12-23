@@ -1,6 +1,5 @@
 import re
-import sys
-import getopt
+import argparse
 
 
 list_arg = []  # list of all nodes/args
@@ -8,7 +7,7 @@ dict_graph = {}  # contains the graph
 dict_defend = {}  # contains all args defended by each args
 dict_attack = {}  # contains all args attacking each args
 dict_relation = {}  # contains all args in conflict with each args
-is_cicle = False
+is_cycle = False
 
 cf = []  # list of conflict free extensions
 ad = []  # list of admissible extensions
@@ -286,9 +285,9 @@ def check_complete(extension):
         return False
     return True
 
-def cicle(arg, visited = None):
+def cycle(arg, visited = None):
     """return all visited arguments, starting from arg,
-        change is_cicle if there is a cycle in the graph
+        change is_cycle if there is a cycle in the graph
 
     Args:
         arg (str): the starting argument
@@ -297,8 +296,8 @@ def cicle(arg, visited = None):
     Returns:
         list[str]: list of all visited arg
     """
-    global is_cicle
-    if not is_cicle:
+    global is_cycle
+    if not is_cycle:
         if visited is None:
             visited = []
         if arg not in visited:
@@ -306,13 +305,13 @@ def cicle(arg, visited = None):
         unvisited = []
         for n in dict_graph[arg]:
             if n in visited:
-                is_cicle = True
+                is_cycle = True
                 visited.append(n)
                 break
             if n not in visited:
                 unvisited.append(n)
         for arg in unvisited:
-            cicle(arg, visited)
+            cycle(arg, visited)
     return visited
        
 def dfs(arg, visited=None):
@@ -415,105 +414,74 @@ def skep_stable(sementics):
     """
     if not st:
         return list_arg
-    return skep(sementics)                             
-    
-def string(extension):
-    """displays the list in the requested way
+    return skep(sementics)                                                     
 
-    Args:
-        extension (list[str]): _description_
 
-    Returns:
-        str: return the str that will be displayed
-    """
-    if extension == []:
-        return []
-    res = '[' + extension[0]
-    for ind in range(1,len(extension)):
-        res +=  ','
-        res += extension[ind]
-    res += ']'
-    return res                             
-    
-def main(argv):
-    """main method
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Argumentation Framework Solver")
+    parser.add_argument("-p", choices=["VE-CO", "VE-ST", "DC-CO", "DS-CO", "DC-ST", "DS-ST"],
+                        help="Problem type")
+    parser.add_argument("-f", help="Path to the text file describing the AF")
+    parser.add_argument("-a", nargs="+", help="Names of arguments in the query set or query argument")
+    return parser.parse_args()
 
-    Args:
-        argv (list[str]): contains all the parameters entered on the terminal
-    """
-    global gr, st, pr, co, cf, ad, list_arg, dict_graph, dict_defend, dict_attack, dict_relation, is_cicle 
-    output = ''
-    extension = list()
-    
-    opts, args = getopt.getopt(argv,"f:p:a:")
+def load_data(file_path):
+    get_graph(file_path)
+    get_attack()
+    get_defend()
+    get_relation()
+    conflict_free()
+    #admissible()
+    for arg1 in list_arg:
+        cycle(arg1, visited=None)
+    if is_cycle:
+        grounded()
+        complete()
+        stable()                                
+    else:
+        well_founded()
 
-    tmp = opts[0]
-    opts[0] = opts[1]
-    opts[1] = tmp
-    
-    for opt, arg in opts:
-        if opt == "-f":
-            get_graph(arg)
-            get_attack()
-            get_defend()
-            get_relation()
-            conflict_free()
-            #admissible()
-            for arg1 in list_arg:
-                cicle(arg1, visited=None)
-            if is_cicle:
-                grounded()
-                complete()
-                stable()                                
-            else:
-                well_founded()
-           
-        elif opt == "-p":
-            if arg == "SE-CO":
-                if co == [[]]:  # if co is equals to {∅}
-                    output = 'NO'
-                else:
-                    extension = co[-1].copy()
-                    output = string(extension)
-            elif arg == "DC-CO":
-                extension = cred(co)
-                output = string(extension)
-            elif arg == "DS-CO":
-                extension = skep(co)
-                output = string(extension)
-            elif arg == "SE-ST":
-                if st == []:  # if st is equals to ∅ 
-                    output = 'NO'
-                else:
-                    extension = st[-1].copy()
-                    output = string(extension)
-            elif arg == "DC-ST":
-                extension = cred(st)
-                output = string(extension)
-            elif arg == "DS-ST":
-                extension = skep_stable(st)
-                output = string(extension)
-            elif arg== "VE-CO":
-                extension = co
-            elif arg== "VE-ST":
-                extension = st
+def process_argument_VE(arg):
+    return [] if arg == "[]" else arg.upper().split(',')
 
-        elif opt == "-a":
-            if arg == "[]":
-                arg = []
-            elif len(arg) > 1:
-                arg = arg.upper().split(",")
-            else:
-                arg =arg.upper()
-            if arg in extension:
-                output = 'YES'
-            if arg not in extension:
-                output = 'NO'
-    
-    #print(co)
-    #print(skep(co))
-    #print(cred(co))
-    print(output, "\n")
-                              
+def process_argument_DCDS(arg):
+    return arg.upper()
+
+def main():
+    global gr, st, pr, co, cf, ad, list_arg, dict_graph, dict_defend, dict_attack, dict_relation, is_cycle
+
+    # Get command line arguments
+    args = parse_arguments()
+
+    # Load data from the file
+    load_data(args.f)
+
+    is_verify = False
+
+    # Process different types of problems
+    if args.p == "VE-CO":
+        extension = co
+        is_verify = True
+    elif args.p == "VE-ST":
+        extension = st
+        is_verify = True
+    elif args.p == "DC-CO":
+        extension = cred(co)
+    elif args.p == "DS-CO":
+        extension = skep(co)
+    elif args.p == "DC-ST":
+        extension = cred(st)
+    elif args.p == "DS-ST":
+        extension = skep_stable(st)
+
+    # Process the argument
+    arg = process_argument_VE(args.a[0]) if is_verify else process_argument_DCDS(args.a[0])
+
+    # Check if the argument is in the extension
+    output = 'YES' if arg in extension else 'NO'
+
+    # Display the result
+    print(output)
+
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()
