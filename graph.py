@@ -6,17 +6,9 @@ dict_defend = {}  # Contains all arguments defended by each argument
 dict_attack = {}  # Contains all arguments attacking each argument
 dict_conflict = {}  # Contains all arguments in conflict with each argument
 
-is_cycle = False  # Flag indicating the presence of a cycle
-
 cf = []  # List of conflict-free extensions
 ad = []  # List of admissible extensions
 
-# σ-extensions
-gr = []  # Grounded semantics
-st = []  # Stable semantics
-co = []  # Complete semantics
-
-import re
 
 def get_graph(file_name):
     """
