@@ -1,4 +1,4 @@
-import graphe
+import graph
 
 def check_admissible(extension):
     """return True if extension is admissible, else return False
@@ -12,12 +12,12 @@ def check_admissible(extension):
     must_defend_against = list()
     # adds all arg that extension must defend itself against
     for arg in extension:
-        for attacked_by in graphe.dict_attack[arg]:
+        for attacked_by in graph.dict_attack[arg]:
             if attacked_by not in must_defend_against:
                 must_defend_against.append(attacked_by)
     # remove all arg extension defend itself against
     for arg2 in extension:
-        for arg3 in graphe.dict_graph[arg2]:
+        for arg3 in graph.dict_graph[arg2]:
             if arg3 in must_defend_against:
                 must_defend_against.remove(arg3)
     
@@ -30,7 +30,7 @@ def admissible():
     """adds all admissible extensions to ad
     """
     global ad
-    for cf_extension in graphe.cf:
+    for cf_extension in graph.cf:
         if check_admissible(cf_extension):
             ad.append(cf_extension)
 
@@ -47,10 +47,10 @@ def check_stable_extension(extension):
     all_arg = []
     for arg in extension:
         all_arg.append(arg)
-        for value in graphe.dict_graph[arg]:
+        for value in graph.dict_graph[arg]:
             if value not in all_arg:
                 all_arg.append(value)
-    if graphe.list_arg == sorted(all_arg):
+    if graph.list_arg == sorted(all_arg):
         return True
     return False 
                     
@@ -58,12 +58,12 @@ def stable():
     """adds all stable extensions to st
     """
     global st
-    if graphe.co == [[]]:
+    if graph.co == [[]]:
         pass
     else:
-        for co_extension in graphe.co:
-            if check_stable_extension(co_extension) and co_extension not in graphe.st:
-                graphe.st.append(co_extension)
+        for co_extension in graph.co:
+            if check_stable_extension(co_extension) and co_extension not in graph.st:
+                graph.st.append(co_extension)
 
 def defend(extension, arg):
     """return True if extension defends arg against all his attackers
@@ -77,10 +77,10 @@ def defend(extension, arg):
     """
     list_attacked_arg = []  # list of all attacked arguments by extension
     for arg2 in extension:
-        for attacked_arg in graphe.dict_graph[arg2]:  # for all arg attacked by arg2
+        for attacked_arg in graph.dict_graph[arg2]:  # for all arg attacked by arg2
             if attacked_arg not in list_attacked_arg:
                 list_attacked_arg.append(attacked_arg)
-    for attacked_arg2 in graphe.dict_attack[arg]:
+    for attacked_arg2 in graph.dict_attack[arg]:
         if attacked_arg2 not in list_attacked_arg:
             return False
     return True
@@ -95,7 +95,7 @@ def dung_cf(extension):
         list[str]: list of arg or empty list
     """
     if extension == []:
-        for key, value in graphe.dict_attack.items():
+        for key, value in graph.dict_attack.items():
             if value == [] and key not in gr:
                 extension.append(key)
     else:
@@ -110,10 +110,10 @@ def complete():
     """adds all complete extension to co
     """
     global co
-    gr_copy = graphe.gr[0].copy()
+    gr_copy = graph.gr[0].copy()
     if not gr_copy:
-        graphe.co.append(gr_copy)
-    for cf_extension in graphe.cf:
+        graph.co.append(gr_copy)
+    for cf_extension in graph.cf:
         cf_extension_copy = cf_extension.copy()
         is_not_co = True
         while is_not_co:
@@ -122,8 +122,8 @@ def complete():
                 is_not_co = False
                 if (check_complete(cf_extension_copy)
                     and inside(gr_copy, cf_extension_copy)
-                    and cf_extension_copy not in graphe.co ):
-                    graphe.co.append(cf_extension_copy)
+                    and cf_extension_copy not in graph.co ):
+                    graph.co.append(cf_extension_copy)
 
 def inside(extension1, extension2):
     """return True if all arg of extension1 are in extension2
@@ -149,7 +149,7 @@ def check_complete(extension):
     Returns:
         bool: True if extension is complete, otherwise False
     """
-    if graphe.check_conflict_free(extension) and check_admissible(extension):
+    if graph.check_conflict_free(extension) and check_admissible(extension):
         for arg in extension:
             if not defend(extension, arg):
                 return False
@@ -169,15 +169,15 @@ def cycle(arg, visited = None):
         list[str]: list of all visited arg
     """
     global is_cycle 
-    if not graphe.is_cycle:
+    if not graph.is_cycle:
         if visited is None:
             visited = []
         if arg not in visited:
             visited.append(arg)
         unvisited = []
-        for n in graphe.dict_graph[arg]:
+        for n in graph.dict_graph[arg]:
             if n in visited:
-                graphe.is_cycle = True
+                graph.is_cycle = True
                 visited.append(n)
                 break
             if n not in visited:
@@ -201,7 +201,7 @@ def dfs(arg, visited=None):
     if arg not in visited:
         visited.append(arg)
     unvisited = []
-    for arg2 in graphe.dict_graph[arg]:
+    for arg2 in graph.dict_graph[arg]:
         if arg2 not in visited:
             unvisited.append(arg2)       
     for arg in unvisited:
@@ -214,14 +214,14 @@ def grounded():
         grounded added to gr
     """
     global gr
-    gr_copy = graphe.gr.copy()
+    gr_copy = graph.gr.copy()
     
     is_not_gr = True
     while is_not_gr:
         gr_extension = dung_cf(gr_copy)
         if gr_extension == dung_cf(gr_extension):
             is_not_gr = False
-            graphe.gr.append(gr_extension)  
+            graph.gr.append(gr_extension)  
 
 def well_founded():
     """finds all sementics if there is no cycle in the graph
@@ -234,9 +234,9 @@ def well_founded():
             break
     
     gr = [sorted(extension)]
-    st = graphe.gr.copy()
-    pr = graphe.gr.copy()
-    co = graphe.gr.copy()                        
+    st = graph.gr.copy()
+    pr = graph.gr.copy()
+    co = graph.gr.copy()                        
 
 def cred(sementics):
     """return the list of all accepted argument,
@@ -267,8 +267,8 @@ def skep(sementics):
     """
     if sementics:
         tmp = set(sementics[0])
-        if sementics == graphe.st and not graphe.st:
-            tmp = graphe.list_arg.copy()
+        if sementics == graph.st and not graph.st:
+            tmp = graph.list_arg.copy()
         else:
             for extension in sementics:
                 tmp = set(tmp).intersection(set(extension))
@@ -284,6 +284,6 @@ def skep_stable(sementics):
     Returns:
         list[list[str]]: list of all skeptically accepted argument
     """
-    if not graphe.st:
-        return graphe.list_arg
+    if not graph.st:
+        return graph.list_arg
     return skep(sementics)    

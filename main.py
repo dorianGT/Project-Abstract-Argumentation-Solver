@@ -20,32 +20,32 @@ def load_graph(file_path):
     Args:
         file_path (str): Path to the text file describing the argumentation framework.
     """
-    extension.graphe.get_graph(file_path)
+    extension.graph.get_graph(file_path)
 
 def get_data():
     """Perform main graph-related computations.
 
-    This function includes retrieving attack, defend, relation information,
+    This function includes retrieving attack, defend, conflict information,
     checking conflict-free status, detecting cycles, and computing grounded,
     complete, and stable extensions.
 
     Note: This is the main logic for handling graph-related computations.
     """
 
-    # Retrieve attack, defend, and relation information
-    extension.graphe.get_attack()
-    extension.graphe.get_defend()
-    extension.graphe.get_relation()
+    # Retrieve attack, defend, and conflict information
+    extension.graph.get_attack()
+    extension.graph.get_defend()
+    extension.graph.get_conflict()
 
     # Check conflict-free status
-    extension.graphe.conflict_free()
+    extension.graph.conflict_free()
 
     # Perform cycle detection for each argument
-    for arg1 in extension.graphe.list_arg:
+    for arg1 in extension.graph.list_arg:
         extension.cycle(arg1, visited=None)
 
     # Check if a cycle is detected
-    if extension.graphe.is_cycle:
+    if extension.graph.is_cycle:
         # Compute grounded, complete, and stable extensions if there is a cycle
         extension.grounded()
         extension.complete()
@@ -95,19 +95,19 @@ def main():
 
     # Process different types of problems
     if args.p == "VE-CO":
-        extensions = extension.graphe.co
+        extensions = extension.graph.co
         is_verify = True
     elif args.p == "VE-ST":
-        extensions = extension.graphe.st
+        extensions = extension.graph.st
         is_verify = True
     elif args.p == "DC-CO":
-        extensions = extension.cred(extension.graphe.co)
+        extensions = extension.cred(extension.graph.co)
     elif args.p == "DS-CO":
-        extensions = extension.skep(extension.graphe.co)
+        extensions = extension.skep(extension.graph.co)
     elif args.p == "DC-ST":
-        extensions = extension.cred(extension.graphe.st)
+        extensions = extension.cred(extension.graph.st)
     elif args.p == "DS-ST":
-        extensions = extension.skep_stable(extension.graphe.st)
+        extensions = extension.skep_stable(extension.graph.st)
 
     # Get the argument
     arg = get_arguments_VE(args.a[0]) if is_verify else get_argument_DCDS(args.a[0])

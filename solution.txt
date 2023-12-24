@@ -2,7 +2,6 @@ af1
 python main.py -p VE-CO -f test_af1.apx -a []
 python main.py -p VE-CO -f test_af1.apx -a b,d
 python main.py -p VE-CO -f test_af1.apx -a a,d
-python main.py -p DS-CO -f test_af1.apx -a []
 python main.py -p DC-CO -f test_af1.apx -a a
 python main.py -p DC-CO -f test_af1.apx -a b
 python main.py -p DC-CO -f test_af1.apx -a d
@@ -22,7 +21,6 @@ python main.py -p VE-CO -f test_af2.apx -a b,e
 python main.py -p VE-CO -f test_af2.apx -a a
 python main.py -p VE-CO -f test_af2.apx -a a,d
 python main.py -p VE-CO -f test_af2.apx -a a,e
-python main.py -p DS-CO -f test_af2.apx -a []
 python main.py -p DC-CO -f test_af2.apx -a a
 python main.py -p DC-CO -f test_af2.apx -a b
 python main.py -p DC-CO -f test_af2.apx -a d
@@ -31,7 +29,6 @@ python main.py -p VE-ST -f test_af2.apx -a b,d
 python main.py -p VE-ST -f test_af2.apx -a b,e
 python main.py -p VE-ST -f test_af2.apx -a a,e
 python main.py -p VE-ST -f test_af2.apx -a a,d
-python main.py -p DS-ST -f test_af2.apx -a []
 python main.py -p DC-ST -f test_af2.apx -a a
 python main.py -p DC-ST -f test_af2.apx -a b
 python main.py -p DC-ST -f test_af2.apx -a d
@@ -43,7 +40,6 @@ python main.py -p VE-CO -f test_af3.apx -a e
 python main.py -p VE-CO -f test_af3.apx -a a
 python main.py -p VE-CO -f test_af3.apx -a a,d
 python main.py -p VE-CO -f test_af3.apx -a a,e
-python main.py -p DS-CO -f test_af3.apx -a []
 python main.py -p DC-CO -f test_af3.apx -a a
 python main.py -p DC-CO -f test_af3.apx -a d
 python main.py -p DC-CO -f test_af3.apx -a e
@@ -65,7 +61,6 @@ python main.py -p VE-CO -f test_af4.apx -a c,e
 python main.py -p VE-CO -f test_af4.apx -a a,e
 python main.py -p VE-CO -f test_af4.apx -a a,d
 python main.py -p VE-CO -f test_af4.apx -a b,e
-python main.py -p DS-CO -f test_af4.apx -a []
 python main.py -p DC-CO -f test_af4.apx -a a
 python main.py -p DC-CO -f test_af4.apx -a b
 python main.py -p DC-CO -f test_af4.apx -a c
@@ -76,7 +71,6 @@ python main.py -p VE-ST -f test_af4.apx -a c,e
 python main.py -p VE-ST -f test_af4.apx -a a,e
 python main.py -p VE-ST -f test_af4.apx -a a,d
 python main.py -p VE-ST -f test_af4.apx -a b,e
-python main.py -p DS-ST -f test_af4.apx -a []
 python main.py -p DC-ST -f test_af4.apx -a a
 python main.py -p DC-ST -f test_af4.apx -a b
 python main.py -p DC-ST -f test_af4.apx -a c
@@ -86,7 +80,6 @@ python main.py -p DC-ST -f test_af4.apx -a e
 af5
 python main.py -p VE-CO -f test_af5.apx -a []
 python main.py -p VE-CO -f test_af5.apx -a a,c,f
-python main.py -p DS-CO -f test_af5.apx -a []
 python main.py -p DC-CO -f test_af5.apx -a a
 python main.py -p DC-CO -f test_af5.apx -a c
 python main.py -p DC-CO -f test_af5.apx -a f
