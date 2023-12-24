@@ -45,7 +45,7 @@ def get_data():
         extension.cycle(arg1, visited=None)
 
     # Check if a cycle is detected
-    if extension.graph.is_cycle:
+    if extension.is_cycle:
         # Compute grounded, complete, and stable extensions if there is a cycle
         extension.grounded()
         extension.complete()
@@ -95,19 +95,19 @@ def main():
 
     # Process different types of problems
     if args.p == "VE-CO":
-        extensions = extension.graph.co
+        extensions = extension.co
         is_verify = True
     elif args.p == "VE-ST":
-        extensions = extension.graph.st
+        extensions = extension.st
         is_verify = True
     elif args.p == "DC-CO":
-        extensions = extension.cred(extension.graph.co)
+        extensions = extension.cred(extension.co)
     elif args.p == "DS-CO":
-        extensions = extension.skep(extension.graph.co)
+        extensions = extension.skep(extension.co)
     elif args.p == "DC-ST":
-        extensions = extension.cred(extension.graph.st)
+        extensions = extension.cred(extension.st)
     elif args.p == "DS-ST":
-        extensions = extension.skep_stable(extension.graph.st)
+        extensions = extension.skep_stable(extension.st)
 
     # Get the argument
     arg = get_arguments_VE(args.a[0]) if is_verify else get_argument_DCDS(args.a[0])
