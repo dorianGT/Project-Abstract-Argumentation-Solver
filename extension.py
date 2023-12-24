@@ -1,5 +1,12 @@
 import graph
 
+# σ-extensions
+gr = []  # Grounded semantics
+st = []  # Stable semantics
+co = []  # Complete semantics
+
+is_cycle = False  # Flag indicating the presence of a cycle
+
 def check_admissible(extension):
     """return True if extension is admissible, else return False
 
@@ -58,12 +65,12 @@ def stable():
     """adds all stable extensions to st
     """
     global st
-    if graph.co == [[]]:
+    if co == [[]]:
         pass
     else:
-        for co_extension in graph.co:
-            if check_stable_extension(co_extension) and co_extension not in graph.st:
-                graph.st.append(co_extension)
+        for co_extension in co:
+            if check_stable_extension(co_extension) and co_extension not in st:
+                st.append(co_extension)
 
 def defend(extension, arg):
     """return True if extension defends arg against all his attackers
@@ -110,9 +117,9 @@ def complete():
     """adds all complete extension to co
     """
     global co
-    gr_copy = graph.gr[0].copy()
+    gr_copy = gr[0].copy()
     if not gr_copy:
-        graph.co.append(gr_copy)
+        co.append(gr_copy)
     for cf_extension in graph.cf:
         cf_extension_copy = cf_extension.copy()
         is_not_co = True
@@ -122,8 +129,8 @@ def complete():
                 is_not_co = False
                 if (check_complete(cf_extension_copy)
                     and inside(gr_copy, cf_extension_copy)
-                    and cf_extension_copy not in graph.co ):
-                    graph.co.append(cf_extension_copy)
+                    and cf_extension_copy not in co ):
+                    co.append(cf_extension_copy)
 
 def inside(extension1, extension2):
     """return True if all arg of extension1 are in extension2
@@ -169,7 +176,7 @@ def cycle(arg, visited = None):
         list[str]: list of all visited arg
     """
     global is_cycle 
-    if not graph.is_cycle:
+    if not is_cycle:
         if visited is None:
             visited = []
         if arg not in visited:
@@ -177,7 +184,7 @@ def cycle(arg, visited = None):
         unvisited = []
         for n in graph.dict_graph[arg]:
             if n in visited:
-                graph.is_cycle = True
+                is_cycle = True
                 visited.append(n)
                 break
             if n not in visited:
@@ -214,14 +221,14 @@ def grounded():
         grounded added to gr
     """
     global gr
-    gr_copy = graph.gr.copy()
+    gr_copy = gr.copy()
     
     is_not_gr = True
     while is_not_gr:
         gr_extension = dung_cf(gr_copy)
         if gr_extension == dung_cf(gr_extension):
             is_not_gr = False
-            graph.gr.append(gr_extension)  
+            gr.append(gr_extension)  
 
 def well_founded():
     """finds all sementics if there is no cycle in the graph
@@ -234,9 +241,9 @@ def well_founded():
             break
     
     gr = [sorted(extension)]
-    st = graph.gr.copy()
-    pr = graph.gr.copy()
-    co = graph.gr.copy()                        
+    st = gr.copy()
+    pr = gr.copy()
+    co = gr.copy()                        
 
 def cred(sementics):
     """return the list of all accepted argument,
@@ -267,7 +274,7 @@ def skep(sementics):
     """
     if sementics:
         tmp = set(sementics[0])
-        if sementics == graph.st and not graph.st:
+        if sementics == st and not st:
             tmp = graph.list_arg.copy()
         else:
             for extension in sementics:
@@ -284,6 +291,6 @@ def skep_stable(sementics):
     Returns:
         list[list[str]]: list of all skeptically accepted argument
     """
-    if not graph.st:
+    if not st:
         return graph.list_arg
     return skep(sementics)    
