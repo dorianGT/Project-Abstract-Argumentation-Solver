@@ -275,7 +275,7 @@ def grounded():
 def well_founded():
     """Find all semantics if there is no cycle in the graph.
     """
-    global gr, st, pr, co
+    global gr, st, co
     extension = []
     while True:
         extension = dung_cf(extension)
@@ -284,7 +284,6 @@ def well_founded():
 
     gr = [sorted(extension)]
     st = gr.copy()
-    pr = gr.copy()
     co = gr.copy()
 
 def cred(semantics):
