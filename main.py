@@ -124,7 +124,7 @@ def main():
     # Check if the argument is in the extension
     output = 'YES' if arg in extensions else 'NO'
     # Display the result
-    print(output)
+    print(output,end="")
 
 if __name__ == "__main__":
     main()
