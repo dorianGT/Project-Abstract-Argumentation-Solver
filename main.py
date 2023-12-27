@@ -80,8 +80,6 @@ def get_argument_DCDS(arg):
 
 
 def main():
-    global gr, st, pr, co, cf, ad, list_arg, dict_graph, dict_defend, dict_attack, dict_relation, is_cycle
-
     # Get command line arguments
     args = parse_arguments()
 
@@ -125,6 +123,9 @@ def main():
     output = 'YES' if arg in extensions else 'NO'
     # Display the result
     print(output,end="")
+    #print(extension.gr)
+    #print(extension.co)
+    #print(extension.st)
 
 if __name__ == "__main__":
     main()

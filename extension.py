@@ -119,7 +119,7 @@ def dung_cf(extension):
     if extension == []:
         # If the extension is empty, add all arguments that are not attacked by any other argument
         for key, value in graph.dict_attack.items():
-            if value == [] and key not in gr[0]:
+            if value == [] and key not in gr:
                 extension.append(key)
     else:
         start_arg = extension[-1]
